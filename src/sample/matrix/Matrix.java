@@ -48,8 +48,8 @@ public class Matrix {
     public synchronized boolean change(int fromY, int fromX, Direction direction){
         try {
             NumberThread currentThread = (NumberThread) Thread.currentThread();
-            Tile targetTile = findSimpleTargetTile(matrix[fromY][fromX], direction);
             Tile startTile = matrix[fromY][fromX];
+            Tile targetTile = findSimpleTargetTile(startTile, direction);
             if (targetTile != null) {
                 if (currentThread.getValue() == 0) {
                     if (targetTile.getValue() % 2 == 0) {
