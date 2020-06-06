@@ -82,18 +82,18 @@ public class NumberThread extends Thread {
         }
     }
 
-//    @Override
-//    public synchronized void start() {
-//        if(this.value == 0){
-//            try {
-//                System.out.println("I am a big evil and I wake up");
-//                Thread.sleep(1000);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        run();
-//    }
+    @Override
+    public synchronized void start() {
+        if(this.value == 0){
+            try {
+                System.out.println("I am a big evil and I wake up");
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        super.start();
+    }
 
     @Override
     public void run() {
