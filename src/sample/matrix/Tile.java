@@ -1,4 +1,4 @@
-package sample;
+package sample.matrix;
 
 /**
  * Created by HoustoN
@@ -15,6 +15,13 @@ public class Tile {
         this.threadName = threadName;
         this.coordY = coordY;
         this.coordX = coordX;
+    }
+
+    public Tile(Tile tile) {
+        this.value = tile.getValue();
+        this.threadName = tile.getThreadName();
+        this.coordY = tile.getCoordY();
+        this.coordX = tile.getCoordX();
     }
 
     public int getValue() {

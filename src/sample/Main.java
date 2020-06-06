@@ -8,7 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
-import sample.Thread.NumberThread;
+import sample.matrix.Matrix;
+import sample.thread.NumberThread;
 
 public class Main extends Application {
 
@@ -22,13 +23,13 @@ public class Main extends Application {
         GridPane root = new GridPane();
         draw(length, width, root, matrix);
         for (int i = 0; i < 31; i++) {
-            NumberThread thread1 = new NumberThread(i, matrix);
+            NumberThread thread = new NumberThread(i, matrix);
             if(i==0){
-                thread1.setDaemon(true);
-                thread1.setPriority(8);
+                thread.setDaemon(true);
+                thread.setPriority(8);
             }
-            thread1.initialization();
-            thread1.start();
+            thread.initialization();
+            thread.start();
         }
 
 
