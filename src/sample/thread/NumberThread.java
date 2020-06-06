@@ -86,6 +86,7 @@ public class NumberThread extends Thread {
     public synchronized void start() {
         if(this.value == 0){
             try {
+                Thread.sleep(500);
                 System.out.println("I am a big evil and I wake up");
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
