@@ -73,6 +73,7 @@ public class NumberThread extends Thread {
 //                    e.printStackTrace();
                     System.out.println("Oh, zero killed me, i was so young....");
                     System.out.println(this.name + " Value: " + this.value);
+//                    fatality if he still alive
                     Thread.currentThread().stop();
 
                 }
@@ -106,6 +107,7 @@ public class NumberThread extends Thread {
 //            e.printStackTrace();
             System.out.println("its a duplicate");
             System.out.println(this.name + " Value: " + this.value);
+//            fatality if he still alive
             Thread.currentThread().stop();
         }
 
