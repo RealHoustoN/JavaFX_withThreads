@@ -7,8 +7,8 @@ package sample;
 public class Tile {
     private int value;
     private String threadName;
-    private int coordY;
-    private int coordX;
+    private final int coordY;
+    private final int coordX;
 
     public Tile(int value, String threadName, int coordY, int coordX) {
         this.value = value;

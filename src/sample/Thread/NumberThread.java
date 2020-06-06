@@ -2,7 +2,6 @@ package sample.Thread;
 
 import sample.Matrix;
 
-import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -23,11 +22,15 @@ public class NumberThread extends Thread {
         this.Tmatrix = matrix;
 
 
+
+    }
+
+    public void initialization(){
         while (true){
             this.startX = (int)(Math.random()*13);
             this.startY = (int)(Math.random()*13);
             boolean b = false;
-            b = Tmatrix.initT(this.name, value, startY, startX);
+            b = Tmatrix.initThread(this.name, value, startY, startX);
             if(b)
 //                System.out.println(this.name);
                 break;
@@ -53,7 +56,7 @@ public class NumberThread extends Thread {
 
 
 
-    private void move() throws InterruptedException {
+    private void move(){
 
         while (true) {
             int z = (int)((Math.random()*5)+1);
@@ -74,8 +77,14 @@ public class NumberThread extends Thread {
                     }
             if(bool)
                 break;
-            else
-                Thread.sleep(ThreadLocalRandom.current().nextInt(500,1000));
+            else {
+                try {
+                    Thread.sleep(ThreadLocalRandom.current().nextInt(500,1000));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                    System.out.println(this.name + " Value: " + this.value);
+                }
+            }
 
         }
     }
@@ -90,6 +99,7 @@ public class NumberThread extends Thread {
 
         } catch (InterruptedException e) {
             e.printStackTrace();
+            System.out.println(this.name + " Value: " + this.value);
         }
 
     }

@@ -5,9 +5,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import sample.Thread.NumberThread;
@@ -17,14 +15,19 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception
     {
 
-        int size = 12;
-        int length = size;
-        int width = size;
+        final int size = 12;
+        final int length = size;
+        final int width = size;
         Matrix matrix = new Matrix(length, width);
         GridPane root = new GridPane();
         draw(length, width, root, matrix);
-        for (int i = 0; i < 21; i++) {
-            Thread thread1 = new NumberThread(i, matrix);
+        for (int i = 0; i < 31; i++) {
+            NumberThread thread1 = new NumberThread(i, matrix);
+            if(i==0){
+                thread1.setDaemon(true);
+                thread1.setPriority(8);
+            }
+            thread1.initialization();
             thread1.start();
         }
 
@@ -84,8 +87,8 @@ public class Main extends Application {
                     text.setAlignment(Pos.CENTER);
                     text.setEditable(false);
 
-                    root.setRowIndex(text, y);
-                    root.setColumnIndex(text, x);
+                    GridPane.setRowIndex(text, y);
+                    GridPane.setColumnIndex(text, x);
                     root.getChildren().add(text);
                 }
         }

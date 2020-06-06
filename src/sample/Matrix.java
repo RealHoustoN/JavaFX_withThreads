@@ -3,7 +3,6 @@ package sample;
 import sample.Thread.NumberThread;
 
 import java.util.ArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by HoustoN
@@ -12,7 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Matrix {
     private Tile[][] matrix;
     private ArrayList<String> toStop;
-    private ArrayList<Tile> toRename;
+    private ArrayList<String> toRename;
+
 
     public Matrix(int x, int y) {
         this.matrix = new Tile[y][x];
@@ -24,7 +24,10 @@ public class Matrix {
         }
         this.toStop = new ArrayList<>();
         this.toRename = new ArrayList<>();
+
     }
+
+
 
     public Tile[][] getMatrix() {
         return matrix;
@@ -34,7 +37,7 @@ public class Matrix {
         return matrix[y][x].getValue();
     }
 
-    public synchronized boolean initT(String Tname, int value, int Y, int X){
+    public synchronized boolean initThread(String Tname, int value, int Y, int X){
         try {
             if (matrix[Y][X].getValue() == -1) {
                 matrix[Y][X].setValue(value);
@@ -49,29 +52,23 @@ public class Matrix {
 
     public synchronized boolean change(int fromY, int fromX, int value, String Tname, int toY, int toX){
         try {
-            NumberThread numberCorrntThread = (NumberThread) Thread.currentThread();
-                if(toStop.contains(Tname) && numberCorrntThread.getValue() != 0){
-                    numberCorrntThread.interrupt();
-                    System.out.println(numberCorrntThread.getThreadName());
-                    return true;
-                }else {
-                    AtomicBoolean bool = new AtomicBoolean(false);
-                    toRename.forEach(tile -> {
-                        if(tile.getThreadName().equals(Tname)){
-                            numberCorrntThread.setCoordinates(tile.getCoordY(),tile.getCoordX());
-                            numberCorrntThread.setValue(tile.getValue());
-                            bool.set(true);
-                        }
-                    });
-                    if(bool.get()) {
-                        Thread.yield();
-                        return true;
-                    }
-                }
+            NumberThread currentThread = (NumberThread) Thread.currentThread();
+
                     if (value == 0) {
                         if (matrix[toY][toX].getValue() % 2 == 0) {
+                            NumberThread.getAllStackTraces().forEach(
+                                    ((thread , stackTraceElements) -> {
+                                        try{
+                                            NumberThread numberThread = (NumberThread) thread;
 
-                            toStop.add(matrix[toY][toX].getThreadName());
+                                            if(numberThread.getThreadName().equals(matrix[toY][toX].getThreadName())){
+                                                numberThread.interrupt();
+                                            }
+                                        }catch (ClassCastException e){
+//                                            System.out.println(e.getStackTrace().toString());
+                                        }
+                                    })
+                            );
 
                             matrix[fromY][fromX].setValue(-1);
                             matrix[fromY][fromX].setThreadName(null);
@@ -79,10 +76,12 @@ public class Matrix {
                             matrix[toY][toX].setValue(value);
                             matrix[toY][toX].setThreadName(Tname);
 
-                            numberCorrntThread.setCoordinates(toY,toX);
-                            notify();
+                            currentThread.setCoordinates(toY, toX);
+
+
+
                             return true;
-                        }else if(matrix[toY][toX].getValue() != -1){
+                        } else if (matrix[toY][toX].getValue() != -1) {
                             Tile tempTile = matrix[toY][toX];
 
                             matrix[fromY][fromX].setValue(tempTile.getValue() + 1);
@@ -91,24 +90,38 @@ public class Matrix {
                             matrix[toY][toX].setValue(value);
                             matrix[toY][toX].setThreadName(Tname);
 
-                            toRename.add(matrix[fromY][fromX]);
+                            NumberThread.getAllStackTraces().forEach(
+                                    ((thread , stackTraceElements) -> {
+                                        try{
+                                        NumberThread numberThread = (NumberThread) thread;
 
-                            numberCorrntThread.setCoordinates(toY,toX);
+                                        if(numberThread.getThreadName().equals(matrix[fromY][fromX].getThreadName())){
+                                            numberThread.setValue(numberThread.getValue() + 1);
+                                            numberThread.setCoordinates(fromY,fromX);
+                                        }
+                                        }catch (ClassCastException e){
+//                                            System.out.println(e.getStackTrace());
+                                        }
+                                    })
+                            );
 
-                            notify();
+                            currentThread.setCoordinates(toY, toX);
+
                             return true;
-                        }else {
+                        } else {
                             matrix[fromY][fromX].setValue(-1);
                             matrix[fromY][fromX].setThreadName(null);
 
                             matrix[toY][toX].setValue(value);
                             matrix[toY][toX].setThreadName(Tname);
 
-                            numberCorrntThread.setCoordinates(toY,toX);
-                            notify();
+                            currentThread.setCoordinates(toY, toX);
+
                             return true;
                         }
                     } else {
+//                        another numbers
+
                         if (matrix[toY][toX].getValue() == -1) {
                             matrix[fromY][fromX].setValue(-1);
                             matrix[fromY][fromX].setThreadName(null);
@@ -116,15 +129,25 @@ public class Matrix {
                             matrix[toY][toX].setValue(value);
                             matrix[toY][toX].setThreadName(Tname);
 
-                            numberCorrntThread.setCoordinates(toY,toX);
-                            notify();
+                            currentThread.setCoordinates(toY, toX);
+
                             return true;
                         }
                     }
 
-
         }catch (ArrayIndexOutOfBoundsException e){}
-        notify();
+
         return false;
+    }
+
+    public void gggggg(int fromY, int fromX){
+        Tile zero;
+            for (Tile[] tiles : matrix) {
+                for (Tile tile : tiles) {
+                    if(tile.getValue() == 0)
+                        zero = tile;
+                }
+            }
+
     }
 }
